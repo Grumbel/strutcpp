@@ -17,6 +17,12 @@
 cmake_minimum_required(VERSION 3.6)
 project(strut)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
+
+include(GNUInstallDirs)
+include(MaximumWarnings)
+include(ClangTidy)
+
 file(GLOB STRUT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   include/strut/*.hpp)
 
