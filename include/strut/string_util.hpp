@@ -23,32 +23,12 @@
 class StringUtil
 {
 public:
-  /** Compare two strings according to their numeric value, similar to
-      what 'sort -n' does. */
   static bool numeric_less(const std::string& lhs, const std::string& rhs);
 };
 
 std::vector<std::string> string_tokenize(std::string_view text, char delimiter = ' ');
 
 std::vector<std::string> string_split(std::string_view text, char delimiter);
-
-template<class T>
-bool from_string(const std::string& s, T& t)
-{
-  std::istringstream str(s);
-  T tmp;
-  str >> tmp;
-  if (str.fail())
-  {
-    return false;
-  }
-  else
-  {
-    t = tmp;
-    return true;
-  }
-  return false;
-}
 
 #endif
 
