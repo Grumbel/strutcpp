@@ -15,11 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "util/utf8.hpp"
+#include "utf8.hpp"
 
+#include <iostream>
 #include <stdexcept>
 
-#include "util/log.hpp"
+namespace strut {
 
 /** Replacement character for invalid UTF-8 sequences */
 static const uint32_t INVALID_UTF8_SEQUENCE = 0xFFFD;
@@ -90,7 +91,7 @@ UTF8::advance(std::string::const_iterator it, std::string::size_type n)
     }
     else
     {
-      log_error("UTF8: malformed UTF-8 sequence: {}", static_cast<int>(c));
+      std::cerr << "UTF8: malformed UTF-8 sequence: " << static_cast<int>(c) << std::endl;
       it += 1;
     }
   }
@@ -242,7 +243,7 @@ UTF8::iterator::next()
   }
   catch (std::exception&)
   {
-    log_error("Malformed utf-8 sequence beginning with {} found ", *(reinterpret_cast<const uint32_t*>(text->c_str() + pos)));
+    std::cerr << "Malformed utf-8 sequence beginning with {} found " << *(reinterpret_cast<const uint32_t*>(text->c_str() + pos)) << std::endl;
     chr = INVALID_UTF8_SEQUENCE;
     ++pos;
   }
@@ -255,5 +256,7 @@ UTF8::iterator::operator*() const
 {
   return chr;
 }
+
+} // namespace strut
 
 /* EOF */

@@ -21,6 +21,8 @@
 #include <stdint.h>
 #include <string>
 
+namespace strut {
+
 class UTF8
 {
 public:
@@ -87,6 +89,8 @@ public:
 
   static std::string encode_utf8(uint32_t unicode);
 };
+
+} // namespace strut
 
 #endif
 

@@ -18,10 +18,14 @@ cmake_minimum_required(VERSION 3.6)
 project(strut)
 
 file(GLOB STRUT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-  src/*.hpp)
+  include/strut/*.hpp)
 
-add_library(strut INTERFACE)
+file(GLOB STRUT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+  src/*.cpp)
+
+add_library(strut STATIC ${STRUT_SOURCES})
 target_include_directories(strut INTERFACE include/)
+target_include_directories(strut PRIVATE include/strut/)
 set_target_properties(strut PROPERTIES PUBLIC_HEADER "${STRUT_HEADERS}")
 
 if(BUILD_TESTS)
