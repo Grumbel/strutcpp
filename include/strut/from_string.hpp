@@ -17,31 +17,33 @@
 #ifndef HEADER_STRUT_FROM_STRING_HPP
 #define HEADER_STRUT_FROM_STRING_HPP
 
-#include <typeinfo>
+#include <iostream>
 #include <sstream>
+#include <string_view>
+#include <typeinfo>
+
+#include "trim.hpp"
 
 namespace strut {
 
 template<typename T>
-bool from_string(const std::string& s, T& t)
+bool from_string(std::string_view text, T& t)
 {
-  std::istringstream str(s);
+  std::istringstream iss(trim(text));
   T tmp;
-  str >> tmp;
-  if (str.fail())
-  {
+  iss >> tmp;
+  if (iss.fail()) {
     return false;
-  }
-  else
-  {
+  } else {
     t = tmp;
-    return true;
+    // check if there is garbage at the end
+    return iss.eof();
   }
   return false;
 }
 
 template<typename T>
-T from_string(std::string const& text)
+T from_string(std::string_view text)
 {
   T tmp;
   if (from_string(text, tmp)) {

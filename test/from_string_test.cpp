@@ -23,6 +23,18 @@ TEST(FromStringTest, from_string)
   EXPECT_EQ(strut::from_string<int>("123"), 123);
   EXPECT_EQ(strut::from_string<float>("1.25"), 1.25f);
 
+  EXPECT_EQ(strut::from_string<int>("  123"), 123);
+  EXPECT_EQ(strut::from_string<float>("  1.25"), 1.25f);
+
+  EXPECT_EQ(strut::from_string<int>("123  "), 123);
+  EXPECT_EQ(strut::from_string<float>("1.25  "), 1.25f);
+
+  EXPECT_THROW(strut::from_string<int>("abc"), std::invalid_argument);
+  EXPECT_THROW(strut::from_string<float>("abc"), std::invalid_argument);
+
+  EXPECT_THROW(strut::from_string<int>("123abc"), std::invalid_argument);
+  EXPECT_THROW(strut::from_string<float>("123.456.789"), std::invalid_argument);
+
   float fv;
   EXPECT_TRUE(strut::from_string("1.25", fv));
   EXPECT_EQ(fv, 1.25f);
@@ -30,9 +42,6 @@ TEST(FromStringTest, from_string)
   int iv;
   EXPECT_TRUE(strut::from_string("123", iv));
   EXPECT_EQ(iv, 123);
-
-  EXPECT_THROW(strut::from_string<int>("abc"), std::invalid_argument);
-  EXPECT_THROW(strut::from_string<float>("abc"), std::invalid_argument);
 }
 
 /* EOF */
