@@ -14,47 +14,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_STRUT_FROM_STRING_HPP
-#define HEADER_STRUT_FROM_STRING_HPP
+#include <gtest/gtest.h>
 
-#include <typeinfo>
-#include <sstream>
+#include <strut/from_string.hpp>
 
-namespace strut {
-
-template<typename T>
-bool from_string(const std::string& s, T& t)
+TEST(FromStringTest, from_string)
 {
-  std::istringstream str(s);
-  T tmp;
-  str >> tmp;
-  if (str.fail())
-  {
-    return false;
-  }
-  else
-  {
-    t = tmp;
-    return true;
-  }
-  return false;
+  EXPECT_EQ(strut::from_string<int>("123"), 123);
+  EXPECT_EQ(strut::from_string<float>("1.25"), 1.25f);
+
+  float fv;
+  EXPECT_TRUE(strut::from_string("1.25", fv));
+  EXPECT_EQ(fv, 1.25f);
+
+  int iv;
+  EXPECT_TRUE(strut::from_string("123", iv));
+  EXPECT_EQ(iv, 123);
+
+  EXPECT_THROW(strut::from_string<int>("abc"), std::invalid_argument);
+  EXPECT_THROW(strut::from_string<float>("abc"), std::invalid_argument);
 }
-
-template<typename T>
-T from_string(std::string const& text)
-{
-  T tmp;
-  if (from_string(text, tmp)) {
-    return tmp;
-  } else {
-    std::ostringstream oss;
-    oss << "couldn't convert '" << text << "' to " << typeid(T).name();
-    throw std::invalid_argument(oss.str());
-  }
-}
-
-} // namespace strut
-
-#endif
 
 /* EOF */
