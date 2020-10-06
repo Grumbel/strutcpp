@@ -21,18 +21,21 @@
 #include <stdexcept>
 
 namespace strut {
+namespace utf8 {
 
+namespace {
 /** Replacement character for invalid UTF-8 sequences */
-static const uint32_t INVALID_UTF8_SEQUENCE = 0xFFFD;
+constexpr uint32_t INVALID_UTF8_SEQUENCE = 0xFFFD;
+} // namespace
 
 bool
-UTF8::is_linebreak_character(uint32_t unicode)
+is_linebreak_character(uint32_t unicode)
 {
   return unicode == ' ' || unicode >= 0x3400;
 }
 
 std::string::size_type
-UTF8::length(const std::string& str)
+length(const std::string& str)
 {
   // Not checking for valid UTF-8 sequences should be ok, since
   // incorrect ones are a character too.
@@ -50,23 +53,23 @@ UTF8::length(const std::string& str)
 }
 
 std::string
-UTF8::substr(const iterator& first, const iterator& last)
+substr(const iterator& first, const iterator& last)
 {
   return first.get_string().substr(first.get_index(),
                                    last.get_index() - first.get_index());
 }
 
 std::string
-UTF8::substr(const std::string& text, std::string::size_type pos, std::string::size_type n)
+substr(const std::string& text, std::string::size_type pos, std::string::size_type n)
 {
-  std::string::const_iterator beg_it = UTF8::advance(text.begin(), pos);
-  std::string::const_iterator end_it = UTF8::advance(beg_it, n);
+  std::string::const_iterator beg_it = advance(text.begin(), pos);
+  std::string::const_iterator end_it = advance(beg_it, n);
 
   return std::string(beg_it, end_it);
 }
 
 std::string::const_iterator
-UTF8::advance(std::string::const_iterator it, std::string::size_type n)
+advance(std::string::const_iterator it, std::string::size_type n)
 {
   for(std::string::size_type i = 0; i < n; ++i)
   {
@@ -98,17 +101,17 @@ UTF8::advance(std::string::const_iterator it, std::string::size_type n)
 
   return it;
 }
-/**
- * returns true if this byte matches a bitmask of 10xx.xxxx, i.e. it is the 2nd, 3rd or 4th byte of a multibyte utf8 string
- */
+
+/** returns true if this byte matches a bitmask of 10xx.xxxx, i.e. it
+    is the 2nd, 3rd or 4th byte of a multibyte utf8 string */
 bool
-UTF8::has_multibyte_mark(unsigned char c)
+has_multibyte_mark(unsigned char c)
 {
   return ((c & 0300) == 0200);
 }
 
 uint32_t
-UTF8::decode_utf8(const std::string& text)
+decode_utf8(const std::string& text)
 {
   size_t p = 0;
   return decode_utf8(text, p);
@@ -122,7 +125,7 @@ UTF8::decode_utf8(const std::string& text)
  * See unicode standard section 3.10 table 3-5 and 3-6 for details.
  */
 uint32_t
-UTF8::decode_utf8(const std::string& text, size_t& p)
+decode_utf8(const std::string& text, size_t& p)
 {
   unsigned char c1 = static_cast<unsigned char>(text[p+0]);
 
@@ -180,7 +183,7 @@ UTF8::decode_utf8(const std::string& text, size_t& p)
 }
 
 std::string
-UTF8::encode_utf8(uint32_t unicode)
+encode_utf8(uint32_t unicode)
 {
   std::string result;
   if (unicode < 0x80)
@@ -209,7 +212,7 @@ UTF8::encode_utf8(uint32_t unicode)
 }
 
 // FIXME: Get rid of exceptions in this code
-UTF8::iterator::iterator(const std::string& text_)
+iterator::iterator(const std::string& text_)
   : text(&text_),
     pos(0),
     idx(0),
@@ -217,7 +220,7 @@ UTF8::iterator::iterator(const std::string& text_)
 {
 }
 
-UTF8::iterator::iterator(const std::string& text_, const std::string::iterator it)
+iterator::iterator(const std::string& text_, const std::string::iterator it)
   : text(&text_),
     pos(static_cast<size_t>(it - text->begin())),
     idx(pos),
@@ -225,16 +228,16 @@ UTF8::iterator::iterator(const std::string& text_, const std::string::iterator i
 {
 }
 
-UTF8::iterator
-UTF8::iterator::operator+(int n)
+iterator
+iterator::operator+(int n)
 {
-  UTF8::iterator it = *this;
+  iterator it = *this;
   for(int i = 0; i < n && it.next(); ++i);
   return it;
 }
 
 bool
-UTF8::iterator::next()
+iterator::next()
 {
   try
   {
@@ -243,7 +246,9 @@ UTF8::iterator::next()
   }
   catch (std::exception&)
   {
-    std::cerr << "Malformed utf-8 sequence beginning with {} found " << *(reinterpret_cast<const uint32_t*>(text->c_str() + pos)) << std::endl;
+    std::cerr << "Malformed utf-8 sequence beginning with {} found "
+              << *(reinterpret_cast<const uint32_t*>(text->c_str() + pos))
+              << std::endl;
     chr = INVALID_UTF8_SEQUENCE;
     ++pos;
   }
@@ -252,11 +257,12 @@ UTF8::iterator::next()
 }
 
 uint32_t
-UTF8::iterator::operator*() const
+iterator::operator*() const
 {
   return chr;
 }
 
+} // namespace utf8
 } // namespace strut
 
 /* EOF */

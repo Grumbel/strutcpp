@@ -22,74 +22,65 @@
 #include <string>
 
 namespace strut {
+namespace utf8 {
 
-class UTF8
+class iterator
 {
+private:
+  const std::string* text;
+
+  /** Position of the next Unicode character after \a chr */
+  std::string::size_type pos;
+
+  /** Position of \a chr */
+  std::string::size_type idx;
+
+  /** Current Unicode character */
+  uint32_t chr;
+
 public:
-  class iterator
-  {
-  private:
-    const std::string* text;
+  /** Create a UTF8 iterator, note that \a text is stored as
+      pointer, thus it must remain valid for the lifetime of the
+      iterator. */
+  iterator(const std::string& text);
+  iterator(const std::string& text, std::string::iterator it);
 
-    /** Position of the next Unicode character after \a chr */
-    std::string::size_type pos;
+  bool next();
+  iterator operator+(int n);
+  uint32_t operator*() const;
 
-    /** Position of \a chr */
-    std::string::size_type idx;
+  /** Returns the starting position of the current character */
+  std::string::size_type get_index() const { return idx; }
 
-    /** Current Unicode character */
-    uint32_t chr;
-
-  public:
-    /** Create a UTF8 iterator, note that \a text is stored as
-        pointer, thus it must remain valid for the lifetime of the
-        iterator. */
-    iterator(const std::string& text);
-    iterator(const std::string& text, std::string::iterator it);
-
-    bool next();
-    iterator operator+(int n);
-    uint32_t operator*() const;
-
-    /** Returns the starting position of the current character */
-    std::string::size_type get_index() const { return idx; }
-
-    const std::string& get_string() const { return *text; }
-  };
-
-  /**
-   * Returns the number of characters in a UTF-8 string
-   */
-  static std::string::size_type length(const std::string& str);
-
-  static std::string substr(const iterator& first, const iterator& last);
-  static std::string substr(const std::string& text, std::string::size_type pos, std::string::size_type n);
-  static std::string::const_iterator advance(std::string::const_iterator it, std::string::size_type n = 1);
-
-  /**
-   * return true if a linebreak is allowed after this character
-   */
-  static bool is_linebreak_character(uint32_t unicode);
-
-  /**
-   * returns true if this byte matches a bitmask of 10xx.xxxx, i.e. it is the 2nd, 3rd or 4th byte of a multibyte utf8 string
-   */
-  static bool has_multibyte_mark(unsigned char c);
-
-  /**
-   * gets unicode character at byte position @a p of UTF-8 encoded @a
-   * text, then advances @a p to the next character.
-   *
-   * @throws std::runtime_error if decoding fails.
-   * See unicode standard section 3.10 table 3-5 and 3-6 for details.
-   */
-  static uint32_t decode_utf8(const std::string& text, size_t& p);
-
-  static uint32_t decode_utf8(const std::string& text);
-
-  static std::string encode_utf8(uint32_t unicode);
+  const std::string& get_string() const { return *text; }
 };
 
+/** Returns the number of characters in a UTF-8 string */
+std::string::size_type length(const std::string& str);
+
+std::string substr(const iterator& first, const iterator& last);
+std::string substr(const std::string& text, std::string::size_type pos, std::string::size_type n);
+std::string::const_iterator advance(std::string::const_iterator it, std::string::size_type n = 1);
+
+/** return true if a linebreak is allowed after this character */
+bool is_linebreak_character(uint32_t unicode);
+
+/** returns true if this byte matches a bitmask of 10xx.xxxx, i.e. it
+    is the 2nd, 3rd or 4th byte of a multibyte utf8 string */
+bool has_multibyte_mark(unsigned char c);
+
+/** gets unicode character at byte position @a p of UTF-8 encoded @a
+    text, then advances @a p to the next character.
+
+    @throws std::runtime_error if decoding fails. See unicode standard
+    section 3.10 table 3-5 and 3-6 for details. */
+uint32_t decode_utf8(const std::string& text, size_t& p);
+
+uint32_t decode_utf8(const std::string& text);
+
+std::string encode_utf8(uint32_t unicode);
+
+} // namespace utf8
 } // namespace strut
 
 #endif
