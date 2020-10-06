@@ -25,4 +25,13 @@ TEST(ToStringTest, to_string)
   EXPECT_EQ(strut::to_string("Hello World"), "Hello World");
 }
 
+TEST(ToStringTest, type_to_string)
+{
+  EXPECT_EQ(strut::to_string<short>(), "short");
+  EXPECT_EQ(strut::to_string<int>(), "int");
+  EXPECT_EQ(strut::to_string<long>(), "long");
+  EXPECT_EQ(strut::to_string<float>(), "float");
+  EXPECT_EQ(strut::to_string<double>(), "double");
+}
+
 /* EOF */

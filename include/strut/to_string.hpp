@@ -20,6 +20,10 @@
 #include <sstream>
 #include <string>
 
+#ifdef __GNUC__
+#  include <cxxabi.h>
+#endif
+
 namespace strut {
 
 template<class T>
@@ -28,6 +32,25 @@ std::string to_string(const T& value)
   std::ostringstream oss;
   oss << value;
   return oss.str();
+}
+
+/** Convert typename T to a human readable string */
+template<typename T>
+std::string to_string()
+{
+#ifdef __GNUC__
+  int status;
+  char* name = abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, &status);
+  if (name == nullptr) {
+    return typeid(T).name();
+  } else {
+    std::string result = name;
+    free(name);
+    return result;
+  }
+#else
+  return typeid(T).name();
+#endif
 }
 
 } // namespace strut
