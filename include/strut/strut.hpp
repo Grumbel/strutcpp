@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#ifndef HEADER_STRUT_STRUT_HPP
+#define HEADER_STRUT_STRUT_HPP
+
 #include "case.hpp"
 #include "from_string.hpp"
 #include "numeric_less.hpp"
@@ -22,6 +25,8 @@
 #include "tokenize.hpp"
 #include "trim.hpp"
 #include "utf8.hpp"
+
+#endif
 
 /* EOF */
 
