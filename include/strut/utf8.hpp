@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <string_view>
 
 namespace strut {
 namespace utf8 {
@@ -27,13 +28,13 @@ namespace utf8 {
 class iterator
 {
 private:
-  const std::string* text;
+  std::string_view text;
 
   /** Position of the next Unicode character after \a chr */
-  std::string::size_type pos;
+  std::string_view::size_type pos;
 
   /** Position of \a chr */
-  std::string::size_type idx;
+  std::string_view::size_type idx;
 
   /** Current Unicode character */
   uint32_t chr;
@@ -42,25 +43,24 @@ public:
   /** Create a UTF8 iterator, note that \a text is stored as
       pointer, thus it must remain valid for the lifetime of the
       iterator. */
-  iterator(const std::string& text);
-  iterator(const std::string& text, std::string::iterator it);
+  iterator(std::string_view text);
 
   bool next();
   iterator operator+(int n);
   uint32_t operator*() const;
 
   /** Returns the starting position of the current character */
-  std::string::size_type get_index() const { return idx; }
+  std::string_view::size_type get_index() const { return idx; }
 
-  const std::string& get_string() const { return *text; }
+  std::string_view get_string() const { return text; }
 };
 
 /** Returns the number of characters in a UTF-8 string */
-std::string::size_type length(const std::string& str);
+std::string::size_type length(std::string_view str);
 
 std::string substr(const iterator& first, const iterator& last);
-std::string substr(const std::string& text, std::string::size_type pos, std::string::size_type n);
-std::string::const_iterator advance(std::string::const_iterator it, std::string::size_type n = 1);
+std::string substr(std::string_view text, std::string::size_type pos, std::string::size_type n);
+std::string_view::const_iterator advance(std::string_view::const_iterator it, std::string::size_type n = 1);
 
 /** return true if a linebreak is allowed after this character */
 bool is_linebreak_character(uint32_t unicode);
@@ -74,9 +74,9 @@ bool has_multibyte_mark(unsigned char c);
 
     @throws std::runtime_error if decoding fails. See unicode standard
     section 3.10 table 3-5 and 3-6 for details. */
-uint32_t decode_utf8(const std::string& text, size_t& p);
+uint32_t decode_utf8(std::string_view text, size_t& p);
 
-uint32_t decode_utf8(const std::string& text);
+uint32_t decode_utf8(std::string_view text);
 
 std::string encode_utf8(uint32_t unicode);
 

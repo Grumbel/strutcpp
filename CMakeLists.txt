@@ -30,6 +30,10 @@ file(GLOB STRUT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   src/*.cpp)
 
 add_library(strut STATIC ${STRUT_SOURCES})
+set_target_properties(strut PROPERTIES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF)
 target_include_directories(strut INTERFACE include/)
 target_include_directories(strut PRIVATE include/strut/)
 set_target_properties(strut PROPERTIES PUBLIC_HEADER "${STRUT_HEADERS}")

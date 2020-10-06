@@ -35,12 +35,12 @@ is_linebreak_character(uint32_t unicode)
 }
 
 std::string::size_type
-length(const std::string& str)
+length(std::string_view str)
 {
   // Not checking for valid UTF-8 sequences should be ok, since
   // incorrect ones are a character too.
   std::string::size_type len = 0;
-  for(std::string::const_iterator i = str.begin(); i != str.end(); ++i)
+  for(std::string_view::const_iterator i = str.begin(); i != str.end(); ++i)
   {
     unsigned char c = static_cast<unsigned char>(*i);
     if (((c & 0xc0) == 0xc0) || (c < 0x80)) // 0xc0 == 1100_000
@@ -55,21 +55,21 @@ length(const std::string& str)
 std::string
 substr(const iterator& first, const iterator& last)
 {
-  return first.get_string().substr(first.get_index(),
-                                   last.get_index() - first.get_index());
+  return std::string(first.get_string().substr(first.get_index(),
+                                               last.get_index() - first.get_index()));
 }
 
 std::string
-substr(const std::string& text, std::string::size_type pos, std::string::size_type n)
+substr(std::string_view text, std::string::size_type pos, std::string::size_type n)
 {
-  std::string::const_iterator beg_it = advance(text.begin(), pos);
-  std::string::const_iterator end_it = advance(beg_it, n);
+  std::string_view::const_iterator beg_it = advance(text.begin(), pos);
+  std::string_view::const_iterator end_it = advance(beg_it, n);
 
   return std::string(beg_it, end_it);
 }
 
-std::string::const_iterator
-advance(std::string::const_iterator it, std::string::size_type n)
+std::string_view::const_iterator
+advance(std::string_view::const_iterator it, std::string::size_type n)
 {
   for(std::string::size_type i = 0; i < n; ++i)
   {
@@ -111,7 +111,7 @@ has_multibyte_mark(unsigned char c)
 }
 
 uint32_t
-decode_utf8(const std::string& text)
+decode_utf8(std::string_view text)
 {
   size_t p = 0;
   return decode_utf8(text, p);
@@ -125,7 +125,7 @@ decode_utf8(const std::string& text)
  * See unicode standard section 3.10 table 3-5 and 3-6 for details.
  */
 uint32_t
-decode_utf8(const std::string& text, size_t& p)
+decode_utf8(std::string_view text, size_t& p)
 {
   unsigned char c1 = static_cast<unsigned char>(text[p+0]);
 
@@ -212,19 +212,11 @@ encode_utf8(uint32_t unicode)
 }
 
 // FIXME: Get rid of exceptions in this code
-iterator::iterator(const std::string& text_)
-  : text(&text_),
-    pos(0),
-    idx(0),
-    chr(INVALID_UTF8_SEQUENCE)
-{
-}
-
-iterator::iterator(const std::string& text_, const std::string::iterator it)
-  : text(&text_),
-    pos(static_cast<size_t>(it - text->begin())),
-    idx(pos),
-    chr(INVALID_UTF8_SEQUENCE)
+iterator::iterator(std::string_view text_) :
+  text(text_),
+  pos(0),
+  idx(0),
+  chr(INVALID_UTF8_SEQUENCE)
 {
 }
 
@@ -242,18 +234,18 @@ iterator::next()
   try
   {
     idx = pos;
-    chr = decode_utf8(*text, pos);
+    chr = decode_utf8(text, pos);
   }
   catch (std::exception&)
   {
     std::cerr << "Malformed utf-8 sequence beginning with {} found "
-              << *(reinterpret_cast<const uint32_t*>(text->c_str() + pos))
+              << *(reinterpret_cast<const uint32_t*>(text.data() + pos))
               << std::endl;
     chr = INVALID_UTF8_SEQUENCE;
     ++pos;
   }
 
-  return pos <= text->size();
+  return pos <= text.size();
 }
 
 uint32_t
