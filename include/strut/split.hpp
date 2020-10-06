@@ -41,6 +41,87 @@ std::vector<std::string> split(std::string_view text, char delimiter)
   return result;
 }
 
+class splitter
+{
+public:
+  friend class iterator;
+
+  class iterator {
+  public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = std::string_view;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+
+  public:
+    iterator() :
+      m_parent(nullptr), m_start(0), m_end(0)
+    {}
+
+    iterator(splitter const* parent) :
+      m_parent(parent), m_start(0), m_end(0)
+    {
+      auto const& text = m_parent->m_text;
+      auto const& delimiter = m_parent->m_delimiter;
+
+      m_end = text.find(delimiter);
+      if (m_end == std::string_view::npos) {
+        m_end = text.size();
+      }
+    }
+
+    iterator(iterator const& other) = default;
+    iterator& operator=(iterator const& other) = default;
+
+    bool operator==(iterator const& other) const = default;
+    bool operator!=(iterator const& other) const = default;
+
+    iterator& operator++() {
+      auto const& text = m_parent->m_text;
+      auto const& delimiter = m_parent->m_delimiter;
+
+      if (m_end == text.size()) {
+        *this = iterator();
+        return *this;
+      } else {
+        m_start = m_end + 1;
+        m_end = text.find(delimiter, m_start);
+        if (m_end == std::string_view::npos) {
+          m_end = text.size();
+        }
+        return *this;
+      }
+    }
+
+    std::string_view operator*() const {
+      return m_parent->m_text.substr(m_start, m_end - m_start);
+    }
+
+  private:
+    splitter const* m_parent;
+    std::string_view::size_type m_start;
+    std::string_view::size_type m_end;
+  };
+
+public:
+  splitter(std::string_view text, char delimiter) :
+    m_text(text),
+    m_delimiter(delimiter)
+  {}
+
+  splitter(splitter const& other) = default;
+  splitter& operator=(splitter const& other) = default;
+
+  iterator begin() const { return iterator(this); }
+  iterator end() const { return iterator(); }
+
+private:
+  std::string_view m_text;
+  char m_delimiter;
+};
+
+
 } // namespace strut
 
 #endif
