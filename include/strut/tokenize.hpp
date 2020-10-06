@@ -41,6 +41,81 @@ std::vector<std::string> tokenize(std::string_view text, char delimiter)
   return result;
 }
 
+class tokenizer
+{
+public:
+  friend class iterator;
+
+  class iterator {
+  public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = std::string_view;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+
+  public:
+    iterator() :
+      m_parent(nullptr), m_i(0), m_start(0), m_end(0)
+    {}
+
+    iterator(tokenizer const* parent) :
+      m_parent(parent), m_i(0), m_start(0), m_end(0)
+    {
+      operator++();
+    }
+
+    iterator(iterator const& other) = default;
+    iterator& operator=(iterator const& other) = default;
+
+    bool operator==(iterator const& other) const = default;
+    bool operator!=(iterator const& other) const = default;
+
+    iterator& operator++() {
+      if (m_i == m_parent->m_text.size()) {
+        return *this = iterator();
+      } else {
+        while(m_parent->m_text[m_i] == m_parent->m_delimiter && m_i != m_parent->m_text.size()) { ++m_i; }
+        m_start = m_i;
+        while(m_parent->m_text[m_i] != m_parent->m_delimiter && m_i != m_parent->m_text.size()) { ++m_i; }
+        m_end = m_i;
+
+        if (m_start == m_end) {
+          operator++();
+        }
+
+        return *this;
+      }
+    }
+
+    std::string_view operator*() const {
+      return m_parent->m_text.substr(m_start, m_end - m_start);
+    }
+
+  private:
+    tokenizer const* m_parent;
+    std::string_view::size_type m_i;
+    std::string_view::size_type m_start;
+    std::string_view::size_type m_end;
+  };
+
+public:
+  tokenizer(std::string_view text, char delimiter) :
+    m_text(text),
+    m_delimiter(delimiter)
+  {}
+
+  tokenizer(tokenizer const& other) = default;
+  tokenizer& operator=(tokenizer const& other) = default;
+
+  iterator begin() const { return iterator(this); }
+  iterator end() const { return iterator(); }
+
+private:
+  std::string_view m_text;
+  char m_delimiter;
+};
+
 } // namespace strut
 
 #endif
