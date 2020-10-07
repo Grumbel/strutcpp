@@ -22,6 +22,7 @@
 #include <string_view>
 #include <typeinfo>
 
+#include "to_string.hpp"
 #include "trim.hpp"
 
 namespace strut {
@@ -50,7 +51,7 @@ T from_string(std::string_view text)
     return tmp;
   } else {
     std::ostringstream oss;
-    oss << "couldn't convert '" << text << "' to " << typeid(T).name();
+    oss << "couldn't convert '" << text << "' to " << to_string<T>();
     throw std::invalid_argument(oss.str());
   }
 }
