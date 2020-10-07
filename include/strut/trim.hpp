@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#ifndef HEADER_STRUT_TRIM_HPP
+#define HEADER_STRUT_TRIM_HPP
+
 #include <cctype>
 
 namespace strut {
@@ -41,5 +44,7 @@ std::string trim(std::string_view text)
 }
 
 } // namespace strut
+
+#endif
 
 /* EOF */
