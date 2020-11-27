@@ -15,7 +15,7 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef HEADER_STRUT_FILE_HPP
-#define HEADER_STRUT_FILe_HPP
+#define HEADER_STRUT_FILE_HPP
 
 #include <filesystem>
 #include <string>
