@@ -23,8 +23,8 @@
 
 namespace strut {
 
-std::string readfile(std::filesystem::path filename);
-std::vector<std::string> readlines(std::filesystem::path filename);
+std::string readfile(std::filesystem::path const& filename);
+std::vector<std::string> readlines(std::filesystem::path const& filename);
 
 } // namespace strut
 

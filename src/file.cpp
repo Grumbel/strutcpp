@@ -23,7 +23,7 @@
 
 namespace strut {
 
-std::string readfile(std::filesystem::path filename)
+std::string readfile(std::filesystem::path const& filename)
 {
   std::ifstream fin(filename);
   if (!fin) {
@@ -46,7 +46,7 @@ std::string readfile(std::filesystem::path filename)
   return result;
 }
 
-std::vector<std::string> readlines(std::filesystem::path filename)
+std::vector<std::string> readlines(std::filesystem::path const& filename)
 {
   std::ifstream fin(filename);
   if (!fin) {
