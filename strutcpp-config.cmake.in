@@ -1,9 +1,0 @@
-get_filename_component(STRUTCPP_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-
-include(CMakeFindDependencyMacro)
-
-if(NOT TARGET strut)
-  include("${STRUTCPP_CMAKE_DIR}/strutcpp-targets.cmake")
-endif()
-
-# EOF #

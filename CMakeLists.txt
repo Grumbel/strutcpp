@@ -43,22 +43,6 @@ target_include_directories(strut INTERFACE
 target_include_directories(strut PRIVATE include/strut/)
 set_target_properties(strut PROPERTIES PUBLIC_HEADER "${STRUT_HEADERS}")
 
-install(TARGETS strut
-  EXPORT strutcpp-targets
-  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
-
-# CMake integration
-configure_file(strutcpp-config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/strutcpp-config.cmake" @ONLY)
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/strutcpp-config.cmake"
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/strutcpp/")
-export(TARGETS strut
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/strutcpp-targets.cmake")
-export(PACKAGE strut)
-install(EXPORT strutcpp-targets
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/strutcpp/")
-
 if(BUILD_TESTS)
   find_package(GTest REQUIRED)
 
@@ -79,5 +63,7 @@ if(BUILD_TESTS)
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     COMMAND test_strut)
 endif()
+
+include(ExportAndInstallLibrary)
 
 # EOF #
