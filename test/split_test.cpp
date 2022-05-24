@@ -1,6 +1,23 @@
 #include <gtest/gtest.h>
 
-#include "strut/split.hpp"
+#include <strut/split.hpp>
+
+TEST(SplitAt, split_at)
+{
+  {
+    std::string lhs, rhs;
+    strut::split_at("Hello World", ' ', &lhs, &rhs);
+    EXPECT_EQ(lhs, "Hello");
+    EXPECT_EQ(rhs, "World");
+  }
+
+  {
+    std::string lhs, rhs;
+    strut::split_at("", ' ', &lhs, &rhs);
+    EXPECT_EQ(lhs, "");
+    EXPECT_EQ(rhs, "");
+  }
+}
 
 using V = std::vector<std::string>;
 using T = std::tuple<std::string, char, V>;

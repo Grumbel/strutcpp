@@ -18,8 +18,36 @@
 #define HEADER_STRUT_SPLIT_HPP
 
 #include <string_view>
+#include <string>
+#include <vector>
 
 namespace strut {
+
+void split_at(const std::string& str, char delimiter, std::string* lhs, std::string* rhs);
+
+inline
+std::vector<std::string> split(std::string_view text, std::string_view delimiter)
+{
+  auto is_delimiter = [delimiter](char c) -> bool {
+    return std::find(delimiter.begin(), delimiter.end(), c) != delimiter.end();
+  };
+
+  std::vector<std::string> result;
+
+  std::string::size_type start = 0;
+  for(std::string::size_type i = 0; i != text.size(); ++i)
+  {
+    if (is_delimiter(text[i]))
+    {
+      result.emplace_back(text.substr(start, i - start));
+      start = i + 1;
+    }
+  }
+
+  result.emplace_back(text.substr(start));
+
+  return result;
+}
 
 inline
 std::vector<std::string> split(std::string_view text, char delimiter)
