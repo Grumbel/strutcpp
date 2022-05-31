@@ -1,4 +1,4 @@
 [submodule "external/tinycmmc"]
 	path = external/tinycmmc
-	url = https://gitlab.com/grumbel/cmake-modules.git
+	url = https://gitlab.com/grumbel/tinycmmc.git
 
