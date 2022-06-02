@@ -22,7 +22,7 @@ namespace strut {
 /** Compare two strings according to their numeric value, similar to
     what 'sort -n' does. */
 inline
-bool numeric_less(const std::string& lhs, const std::string& rhs)
+bool numeric_less(std::string const& lhs, std::string const& rhs)
 {
   std::string::size_type i = 0;
   std::string::size_type min_len = std::min(lhs.size(), rhs.size());

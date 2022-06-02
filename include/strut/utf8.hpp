@@ -58,7 +58,7 @@ public:
 /** Returns the number of characters in a UTF-8 string */
 std::string::size_type length(std::string_view str);
 
-std::string substr(const iterator& first, const iterator& last);
+std::string substr(iterator const& first, iterator const& last);
 std::string substr(std::string_view text, std::string::size_type pos, std::string::size_type n);
 std::string_view::const_iterator advance(std::string_view::const_iterator it, std::string::size_type n = 1);
 

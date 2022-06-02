@@ -18,7 +18,7 @@
 
 namespace strut {
 
-void split_at(const std::string& str, char delimiter, std::string* lhs, std::string* rhs)
+void split_at(std::string const& str, char delimiter, std::string* lhs, std::string* rhs)
 {
   std::string::size_type const p = str.find(delimiter);
   if (p == std::string::npos)

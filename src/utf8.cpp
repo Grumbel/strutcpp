@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+// decode_utf8() came from supertux - 403d6c74ccdac66ffa49a363edaf22c8374c56c5
+
 #include "utf8.hpp"
 
 #include <iostream>
@@ -53,7 +55,7 @@ length(std::string_view str)
 }
 
 std::string
-substr(const iterator& first, const iterator& last)
+substr(iterator const& first, iterator const& last)
 {
   return std::string(first.get_string().substr(first.get_index(),
                                                last.get_index() - first.get_index()));
@@ -239,7 +241,7 @@ iterator::next()
   catch (std::exception&)
   {
     std::cerr << "Malformed utf-8 sequence beginning with {} found "
-              << *(reinterpret_cast<const uint32_t*>(text.data() + pos))
+              << *(reinterpret_cast<uint32_t const*>(text.data() + pos))
               << std::endl;
     chr = INVALID_UTF8_SEQUENCE;
     ++pos;

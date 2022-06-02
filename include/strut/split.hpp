@@ -23,7 +23,7 @@
 
 namespace strut {
 
-void split_at(const std::string& str, char delimiter, std::string* lhs, std::string* rhs);
+void split_at(std::string const& str, char delimiter, std::string* lhs, std::string* rhs);
 
 inline
 std::vector<std::string> split(std::string_view text, std::string_view delimiter)

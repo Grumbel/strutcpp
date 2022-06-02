@@ -27,7 +27,7 @@
 namespace strut {
 
 template<class T>
-std::string to_string(const T& value)
+std::string to_string(T const& value)
 {
   std::ostringstream oss;
   oss << value;
