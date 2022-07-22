@@ -15,7 +15,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in rec {
-        packages = flake-utils.lib.flattenTree {
+        packages = flake-utils.lib.flattenTree rec {
           strutcpp = pkgs.stdenv.mkDerivation {
             pname = "strutcpp";
             version = "0.0.0";
@@ -24,12 +24,13 @@
               pkgs.cmake
             ];
             buildInputs = [
-              tinycmmc.defaultPackage.${system}
+              tinycmmc.packages.${system}.default
 
               pkgs.gtest
             ];
-           };
+          };
+          default = strutcpp;
         };
-        defaultPackage = packages.strutcpp;
-      });
+      }
+    );
 }
