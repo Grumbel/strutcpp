@@ -17,8 +17,9 @@
 #ifndef HEADER_STRUT_TOKENIZE_HPP
 #define HEADER_STRUT_TOKENIZE_HPP
 
-#include <vector>
+#include <algorithm>
 #include <string_view>
+#include <vector>
 
 namespace strut {
 

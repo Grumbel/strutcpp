@@ -17,8 +17,9 @@
 #ifndef HEADER_STRUT_SPLIT_HPP
 #define HEADER_STRUT_SPLIT_HPP
 
-#include <string_view>
+#include <algorithm>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace strut {
