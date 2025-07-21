@@ -18,7 +18,7 @@ stdenv.mkDerivation {
   doCheck = true;
 
   checkPhase = ''
-    make test ARGS="-v"
+    make test ARGS="--verbose"
   '';
 
   nativeBuildInputs = [
