@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <algorithm>
 
 #include "strut/numeric_less.hpp"
 
