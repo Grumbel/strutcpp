@@ -15,7 +15,7 @@
           default = strutcpp;
 
           strutcpp = pkgs.callPackage ./strutcpp.nix {
-            tinycmmc = tinycmmc.packages.${pkgs.system}.default;
+            tinycmmc = tinycmmc.packages.${pkgs.stdenv.hostPlatform.system}.default;
           };
         };
       }
